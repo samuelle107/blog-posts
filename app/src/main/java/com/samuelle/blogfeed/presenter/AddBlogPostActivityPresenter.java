@@ -28,10 +28,12 @@ public class AddBlogPostActivityPresenter {
             @Override
             public void onResponse(Call<BlogPost> call, Response<BlogPost> response) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("userId", response.body().getUserId());
-                returnIntent.putExtra("id", response.body().getId());
-                returnIntent.putExtra("title", response.body().getTitle());
-                returnIntent.putExtra("body", response.body().getBody());
+
+                returnIntent.putExtra("blogPost", new BlogPost(
+                        response.body().getUserId(),
+                        response.body().getId(),
+                        response.body().getTitle(),
+                        response.body().getBody()));
 
                 context.setResult(Activity.RESULT_OK, returnIntent);
                 context.finish();

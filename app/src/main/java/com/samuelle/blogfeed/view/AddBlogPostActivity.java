@@ -27,7 +27,7 @@ public class AddBlogPostActivity extends AppCompatActivity {
 
         confirmPostButton.setOnClickListener(v -> {
             presenter.addBlogPost(
-                    0,
+                    1,
                     blogTitle.getText().toString(),
                     blogBody.getText().toString());
         });

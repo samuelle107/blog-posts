@@ -1,9 +1,12 @@
 package com.samuelle.blogfeed.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class BlogPost {
+public class BlogPost implements Parcelable {
     @SerializedName("userId")
     @Expose
     private int userId;
@@ -55,4 +58,36 @@ public class BlogPost {
     public void setBody(String body) {
         this.body = body;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.userId);
+        dest.writeInt(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.body);
+    }
+
+    protected BlogPost(Parcel in) {
+        this.userId = in.readInt();
+        this.id = in.readInt();
+        this.title = in.readString();
+        this.body = in.readString();
+    }
+
+    public static final Parcelable.Creator<BlogPost> CREATOR = new Parcelable.Creator<BlogPost>() {
+        @Override
+        public BlogPost createFromParcel(Parcel source) {
+            return new BlogPost(source);
+        }
+
+        @Override
+        public BlogPost[] newArray(int size) {
+            return new BlogPost[size];
+        }
+    };
 }

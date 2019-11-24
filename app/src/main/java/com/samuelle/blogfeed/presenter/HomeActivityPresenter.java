@@ -1,13 +1,15 @@
 package com.samuelle.blogfeed.presenter;
 
 import android.content.Intent;
+import android.util.Log;
+import android.view.View;
 
 import com.samuelle.blogfeed.model.BlogPost;
+import com.samuelle.blogfeed.model.User;
 import com.samuelle.blogfeed.service.APIService;
 import com.samuelle.blogfeed.service.APIUtils;
 import com.samuelle.blogfeed.view.BlogPostActivity;
 import com.samuelle.blogfeed.view.HomeActivity;
-import com.samuelle.blogfeed.view.ItemAdapter;
 
 import java.util.List;
 
@@ -25,13 +27,12 @@ public class HomeActivityPresenter {
     }
 
     public void fetchBlogPosts() {
-        Callback callback = new Callback<List<BlogPost>>() {
+        Callback<List<BlogPost>> callback = new Callback<List<BlogPost>>() {
             @Override
             public void onResponse(Call<List<BlogPost>> call, Response<List<BlogPost>> response) {
-                if (response.isSuccessful()) {
-                    context.setBlogPosts(response.body());
-                    initializeBlogPostsView(response.body());
-                }
+                List<BlogPost> blogPosts = response.body();
+                context.setBlogPosts(blogPosts);
+                context.initializeRecyclerView();
             }
 
             @Override
@@ -43,22 +44,34 @@ public class HomeActivityPresenter {
         apiService.getBlogPosts().enqueue(callback);
     }
 
-    private void initializeBlogPostsView(List<BlogPost> blogPosts) {
-        ItemAdapter itemAdapter = new ItemAdapter(context, blogPosts, position -> {
-            Intent intent = new Intent(context, BlogPostActivity.class);
-            intent.putExtra("id", context.getBlogPosts().get(position).getId());
-            intent.putExtra("title", context.getBlogPosts().get(position).getTitle());
-            intent.putExtra("body", context.getBlogPosts().get(position).getBody());
+    public void fetchUserInfo(BlogPost blogPost) {
+        Callback<User> callback = new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+                Intent intent = new Intent(context, BlogPostActivity.class);
+                intent.putExtra("user", user);
+                intent.putExtra("blogPost", blogPost);
 
-            context.startActivity(intent);
-        });
+                context.setProgressOverlayVisibility(View.INVISIBLE);
 
-        context.initializeRecyclerView(itemAdapter);
+                context.startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        };
+
+        apiService.getUser(blogPost.getUserId()).enqueue(callback);
+    }
+
+    public void initializeBlogPostView(BlogPost blogPost) {
+        fetchUserInfo(blogPost);
     }
 
     public void updateBlogPosts(BlogPost blogPost) {
-        context.getBlogPosts().add(0, blogPost);
-        context.getItemAdapter().notifyItemInserted(0);
-        context.scrollToTop();
+        Log.d("Samuel", blogPost.getTitle());
     }
 }

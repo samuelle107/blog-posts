@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key"/>
+
         <activity android:name=".view.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +35,20 @@
         </activity>
 
         <activity android:name=".view.BlogPostActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.UserActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.UserMap">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
 

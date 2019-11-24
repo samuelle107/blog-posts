@@ -13,12 +13,12 @@ import com.samuelle.blogfeed.model.BlogPost;
 
 import java.util.List;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostHolder> {
     private Context context;
     private List<BlogPost> blogPosts;
     private OnItemListener onItemListener;
 
-    public ItemAdapter(
+    public BlogPostAdapter(
             Context context,
             List<BlogPost> blogPosts,
             OnItemListener onItemListener) {
@@ -28,9 +28,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemHolder itemHolder, int position) {
+    public void onBindViewHolder(@NonNull BlogPostHolder blogPostHolder, int position) {
         BlogPost blogPost = blogPosts.get(position);
-        itemHolder.setItemDetails(blogPost);
+        blogPostHolder.setItemDetails(blogPost);
     }
 
     @Override
@@ -40,12 +40,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
 
     @NonNull
     @Override
-    public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BlogPostHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(context)
-                .inflate(R.layout.item_label, parent, false);
+                .inflate(R.layout.blog_post_item, parent, false);
 
-        return new ItemHolder(view, onItemListener);
+        return new BlogPostHolder(view, onItemListener);
     }
 
     public interface OnItemListener {
