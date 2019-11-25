@@ -24,7 +24,6 @@ public class BlogPost implements Parcelable {
     private String body;
     private User user;
     private List<Comment> comments;
-    private int dumb;
 
     public BlogPost(int userId, int id, String title, String body) {
         this.userId = userId;
@@ -79,14 +78,6 @@ public class BlogPost implements Parcelable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public void setDumb(int i) {
-        this.dumb = i;
-    }
-
-    public int getDumb() {
-        return this.dumb;
     }
 
     @Override

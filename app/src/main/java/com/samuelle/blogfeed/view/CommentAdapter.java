@@ -52,7 +52,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
         void onItemClick(int position);
     }
 
-    public void updateComments(Comment comment) {
+    public void addComment(Comment comment) {
         comments.add(0, comment);
         notifyItemChanged(0);
     }

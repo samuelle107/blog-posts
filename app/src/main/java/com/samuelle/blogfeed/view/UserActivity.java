@@ -15,6 +15,9 @@ import com.samuelle.blogfeed.presenter.UserActivityPresenter;
 
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 public class UserActivity extends AppCompatActivity {
     private TextView name;
     private TextView username;
@@ -45,7 +48,27 @@ public class UserActivity extends AppCompatActivity {
 
         presenter
                 .getBlogPostsByUserObservable(user)
-                .subscribe(blogPosts -> initializeBlogPosts(blogPosts));
+                .subscribe(new Observer<List<BlogPost>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<BlogPost> blogPosts) {
+                        initializeBlogPosts(blogPosts);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public void initializeUserProfile(User user) {

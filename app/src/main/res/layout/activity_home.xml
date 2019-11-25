@@ -27,7 +27,7 @@
         android:animateLayoutChanges="true"
         android:background="@android:color/black"
         android:clickable="false"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"

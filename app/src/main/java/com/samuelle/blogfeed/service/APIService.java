@@ -38,11 +38,5 @@ public interface APIService {
 
     @GET("/users/{id}")
     Observable<User> getUser(@Path("id") int id);
-
-//    @POST("/posts")
-//    @FormUrlEncoded
-//    Observable<BlogPost> addPost(
-//            @Field("userId") int userId,
-//            @Field("title") String title,
-//            @Field("body") String body);
 }
+

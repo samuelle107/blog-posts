@@ -10,7 +10,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class UserActivityPresenter {
     private UserActivity context;
@@ -24,7 +23,6 @@ public class UserActivityPresenter {
     public Observable<List<BlogPost>> getBlogPostsByUserObservable(User user) {
         return apiService
                 .getBlogPostsByUserId(user.getId())
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

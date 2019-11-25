@@ -18,6 +18,9 @@ import com.samuelle.blogfeed.presenter.BlogPostActivityPresenter;
 
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 public class BlogPostActivity extends AppCompatActivity {
     private TextView blogTitle;
     private TextView blogBody;
@@ -48,7 +51,30 @@ public class BlogPostActivity extends AppCompatActivity {
 
         initializePostDetails(blogPost);
         initializeUserDetails(blogPost.getUser());
-        initializeComments(blogPost.getComments());
+
+        presenter
+                .getCommentsObservable(blogPost)
+                .subscribe(new Observer<List<Comment>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Comment> comments) {
+                        initializeComments(comments);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public void initializePostDetails(BlogPost blogPost) {
@@ -94,7 +120,7 @@ public class BlogPostActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                commentAdapter.updateComments(data.getExtras().getParcelable("comment"));
+                commentAdapter.addComment(data.getExtras().getParcelable("comment"));
             }
         }
     }
