@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -21,18 +22,44 @@
         android:hint="Add a Title" />
 
     <EditText
+        android:id="@+id/editName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/montserrat"
+        android:hint="Add your name"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/editTitle"
+        app:layout_constraintStart_toStartOf="@+id/editTitle"
+        app:layout_constraintTop_toBottomOf="@+id/editTitle" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/montserrat"
+        android:hint="Add your email"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/editTitle"
+        app:layout_constraintStart_toStartOf="@+id/editName"
+        app:layout_constraintTop_toBottomOf="@+id/editName" />
+
+    <EditText
         android:id="@+id/editBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTitle"
-        app:layout_constraintStart_toStartOf="@+id/editTitle"
-        app:layout_constraintTop_toBottomOf="@+id/editTitle"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
-        android:hint="Add a body"
         android:fontFamily="@font/montserrat"
+        android:hint="Add a body"
+        android:minLines="3"
         android:textSize="18sp"
-        android:minLines="3"/>
+        app:layout_constraintEnd_toEndOf="@+id/editTitle"
+        app:layout_constraintStart_toStartOf="@+id/editEmail"
+        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
 
     <Button
         android:id="@+id/confirmPost"

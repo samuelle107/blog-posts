@@ -37,12 +37,11 @@ public class BlogPostActivity extends AppCompatActivity {
         blogBody = findViewById(R.id.blogBody);
         blogAuthor = findViewById(R.id.blogAuthor);
 
-        User user = getIntent().getExtras().getParcelable("user");
         BlogPost blogPost = getIntent().getExtras().getParcelable("blogPost");
 
-        initializeUserDetails(user);
         initializePostDetails(blogPost);
-        presenter.fetchComments(blogPost);
+        initializeUserDetails(blogPost.getUser());
+        initializeComments(blogPost.getComments());
     }
 
     public void initializePostDetails(BlogPost blogPost) {

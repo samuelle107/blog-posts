@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class User implements Parcelable {
     @SerializedName("id")
     @Expose
@@ -32,8 +34,17 @@ public class User implements Parcelable {
     @SerializedName("company")
     @Expose
     private Company company;
+    private List<BlogPost> blogPosts;
 
-    public User(int id, String name, String username, String email, Address address, String phone, String website, Company company) {
+    public User(
+            int id,
+            String name,
+            String username,
+            String email,
+            Address address,
+            String phone,
+            String website,
+            Company company) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -108,6 +119,15 @@ public class User implements Parcelable {
         this.company = company;
     }
 
+    public List<BlogPost> getBlogPosts() {
+        return blogPosts;
+    }
+
+    public void setBlogPosts(List<BlogPost> blogPosts) {
+        this.blogPosts = blogPosts;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -123,6 +143,7 @@ public class User implements Parcelable {
         dest.writeString(this.phone);
         dest.writeString(this.website);
         dest.writeParcelable(this.company, flags);
+        dest.writeTypedList(this.blogPosts);
     }
 
     protected User(Parcel in) {
@@ -134,6 +155,7 @@ public class User implements Parcelable {
         this.phone = in.readString();
         this.website = in.readString();
         this.company = in.readParcelable(Company.class.getClassLoader());
+        this.blogPosts = in.createTypedArrayList(BlogPost.CREATOR);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

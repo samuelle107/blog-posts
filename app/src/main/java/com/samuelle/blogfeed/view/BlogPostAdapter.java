@@ -1,6 +1,7 @@
 package com.samuelle.blogfeed.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostHolder> {
     @Override
     public void onBindViewHolder(@NonNull BlogPostHolder blogPostHolder, int position) {
         BlogPost blogPost = blogPosts.get(position);
+
         blogPostHolder.setItemDetails(blogPost);
     }
 
@@ -46,6 +48,12 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostHolder> {
                 .inflate(R.layout.blog_post_item, parent, false);
 
         return new BlogPostHolder(view, onItemListener);
+    }
+
+    public void updateBlogPosts(List<BlogPost> blogPosts) {
+        this.blogPosts.clear();
+        this.blogPosts.addAll(blogPosts);
+        this.notifyDataSetChanged();
     }
 
     public interface OnItemListener {

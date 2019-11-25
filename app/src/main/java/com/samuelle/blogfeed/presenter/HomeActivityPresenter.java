@@ -1,21 +1,16 @@
 package com.samuelle.blogfeed.presenter;
 
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 
 import com.samuelle.blogfeed.model.BlogPost;
-import com.samuelle.blogfeed.model.User;
 import com.samuelle.blogfeed.service.APIService;
 import com.samuelle.blogfeed.service.APIUtils;
-import com.samuelle.blogfeed.view.BlogPostActivity;
 import com.samuelle.blogfeed.view.HomeActivity;
 
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivityPresenter {
     private HomeActivity context;
@@ -26,49 +21,46 @@ public class HomeActivityPresenter {
         this.apiService = APIUtils.getAPIService();
     }
 
-    public void fetchBlogPosts() {
-        Callback<List<BlogPost>> callback = new Callback<List<BlogPost>>() {
-            @Override
-            public void onResponse(Call<List<BlogPost>> call, Response<List<BlogPost>> response) {
-                List<BlogPost> blogPosts = response.body();
-                context.setBlogPosts(blogPosts);
-                context.initializeRecyclerView();
-            }
+    private Observable<BlogPost> getBlogPostsObservable() {
+        return apiService
+                .getBlogPosts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(blogPosts -> {
+                    context.setBlogPosts(blogPosts);
 
-            @Override
-            public void onFailure(Call<List<BlogPost>> call, Throwable t) {
-
-            }
-        };
-
-        apiService.getBlogPosts().enqueue(callback);
+                    return Observable.fromIterable(blogPosts);
+                });
     }
 
-    public void fetchUserInfo(BlogPost blogPost) {
-        Callback<User> callback = new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-                Intent intent = new Intent(context, BlogPostActivity.class);
-                intent.putExtra("user", user);
-                intent.putExtra("blogPost", blogPost);
+    private Observable<BlogPost> getUserObservable(final BlogPost blogPost) {
+        return apiService
+                .getUser(blogPost.getUserId())
+                .subscribeOn(Schedulers.io())
+                .map(user -> {
+                    blogPost.setUser(user);
 
-                context.setProgressOverlayVisibility(View.INVISIBLE);
-
-                context.startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        };
-
-        apiService.getUser(blogPost.getUserId()).enqueue(callback);
+                    return blogPost;
+                });
     }
 
-    public void initializeBlogPostView(BlogPost blogPost) {
-        fetchUserInfo(blogPost);
+    private Observable<BlogPost> getCommentsObservable(final BlogPost blogPost) {
+        return apiService
+                .getComments(blogPost.getId())
+                .subscribeOn(Schedulers.io())
+                .map(comments -> {
+                    blogPost.setComments(comments);
+
+                    return blogPost;
+                });
+    }
+
+    public void initializeBlogPosts() {
+        getBlogPostsObservable()
+                .subscribeOn(Schedulers.io())
+                .flatMap(blogPost -> getCommentsObservable(blogPost))
+                .flatMap(blogPost -> getUserObservable(blogPost))
+                .subscribe();
     }
 
     public void updateBlogPosts(BlogPost blogPost) {

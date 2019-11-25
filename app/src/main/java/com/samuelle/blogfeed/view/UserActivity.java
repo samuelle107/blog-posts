@@ -2,8 +2,6 @@ package com.samuelle.blogfeed.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,7 +42,10 @@ public class UserActivity extends AppCompatActivity {
         User user = getIntent().getExtras().getParcelable("user");
 
         initializeUserProfile(user);
-        presenter.fetchBlogPosts(user);
+
+        presenter
+                .getBlogPostsByUserObservable(user)
+                .subscribe(blogPosts -> initializeBlogPosts(blogPosts));
     }
 
     public void initializeUserProfile(User user) {

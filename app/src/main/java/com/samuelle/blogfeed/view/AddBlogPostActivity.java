@@ -14,6 +14,8 @@ public class AddBlogPostActivity extends AppCompatActivity {
     private Button confirmPostButton;
     private EditText blogTitle;
     private EditText blogBody;
+    private EditText name;
+    private EditText email;
     private AddBlogPostActivityPresenter presenter;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +26,14 @@ public class AddBlogPostActivity extends AppCompatActivity {
         confirmPostButton = findViewById(R.id.confirmPost);
         blogTitle = findViewById(R.id.editTitle);
         blogBody = findViewById(R.id.editBody);
+        email = findViewById(R.id.editEmail);
+        name = findViewById(R.id.editName);
 
         confirmPostButton.setOnClickListener(v -> {
             presenter.addBlogPost(
                     1,
+                    name.getText().toString(),
+                    email.getText().toString(),
                     blogTitle.getText().toString(),
                     blogBody.getText().toString());
         });

@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlogPost implements Parcelable {
     @SerializedName("userId")
     @Expose
@@ -19,6 +22,9 @@ public class BlogPost implements Parcelable {
     @SerializedName("body")
     @Expose
     private String body;
+    private User user;
+    private List<Comment> comments;
+    private int dumb;
 
     public BlogPost(int userId, int id, String title, String body) {
         this.userId = userId;
@@ -59,6 +65,30 @@ public class BlogPost implements Parcelable {
         this.body = body;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setDumb(int i) {
+        this.dumb = i;
+    }
+
+    public int getDumb() {
+        return this.dumb;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -70,6 +100,8 @@ public class BlogPost implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeString(this.body);
+        dest.writeParcelable(this.user, flags);
+        dest.writeList(this.comments);
     }
 
     protected BlogPost(Parcel in) {
@@ -77,9 +109,12 @@ public class BlogPost implements Parcelable {
         this.id = in.readInt();
         this.title = in.readString();
         this.body = in.readString();
+        this.user = in.readParcelable(User.class.getClassLoader());
+        this.comments = new ArrayList<Comment>();
+        in.readList(this.comments, Comment.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<BlogPost> CREATOR = new Parcelable.Creator<BlogPost>() {
+    public static final Creator<BlogPost> CREATOR = new Creator<BlogPost>() {
         @Override
         public BlogPost createFromParcel(Parcel source) {
             return new BlogPost(source);
