@@ -1,23 +1,21 @@
 package com.samuelle.blogfeed.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.samuelle.blogfeed.R;
 import com.samuelle.blogfeed.model.BlogPost;
 import com.samuelle.blogfeed.model.Comment;
 import com.samuelle.blogfeed.model.User;
 import com.samuelle.blogfeed.presenter.BlogPostActivityPresenter;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class BlogPostActivity extends AppCompatActivity {
@@ -26,6 +24,7 @@ public class BlogPostActivity extends AppCompatActivity {
     private TextView blogAuthor;
     private RecyclerView recyclerView;
     private CommentAdapter commentAdapter;
+    private FloatingActionButton floatingActionButton;
     private BlogPostActivityPresenter presenter;
 
     @Override
@@ -36,8 +35,16 @@ public class BlogPostActivity extends AppCompatActivity {
         blogTitle = findViewById(R.id.blogTitle);
         blogBody = findViewById(R.id.blogBody);
         blogAuthor = findViewById(R.id.blogAuthor);
+        floatingActionButton = findViewById(R.id.addPostButton);
 
         BlogPost blogPost = getIntent().getExtras().getParcelable("blogPost");
+
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddCommentActivity.class);
+            intent.putExtra("postId", blogPost.getId());
+            startActivityForResult(intent, 1);
+        });
+
 
         initializePostDetails(blogPost);
         initializeUserDetails(blogPost.getUser());
@@ -79,5 +86,16 @@ public class BlogPostActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(commentAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                commentAdapter.updateComments(data.getExtras().getParcelable("comment"));
+            }
+        }
     }
 }

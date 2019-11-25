@@ -28,13 +28,21 @@ public interface APIService {
     @GET("/comments")
     Observable<List<Comment>> getComments(@Query("postId") int postId);
 
+    @POST("/comments")
+    @FormUrlEncoded
+    Observable<Comment> addComment(
+            @Field("postId") int postId,
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("body") String body);
+
     @GET("/users/{id}")
     Observable<User> getUser(@Path("id") int id);
 
-    @POST("/posts")
-    @FormUrlEncoded
-    Observable<BlogPost> addPost(
-            @Field("userId") int userId,
-            @Field("title") String title,
-            @Field("body") String body);
+//    @POST("/posts")
+//    @FormUrlEncoded
+//    Observable<BlogPost> addPost(
+//            @Field("userId") int userId,
+//            @Field("title") String title,
+//            @Field("body") String body);
 }

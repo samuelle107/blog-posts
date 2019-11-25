@@ -32,11 +32,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
     private List<BlogPost> blogPosts;
-    private List<User> users;
-    private Map<BlogPost, User> blogPostUserMap;
+
     private BlogPostAdapter blogPostAdapter;
     private RecyclerView recyclerView;
-    private FloatingActionButton addPostButton;
     private HomeActivityPresenter presenter;
     private CompositeDisposable disposables;
 
@@ -46,12 +44,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         presenter = new HomeActivityPresenter(this);
         disposables = new CompositeDisposable();
-
-        addPostButton = findViewById(R.id.addPostButton);
-        addPostButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddBlogPostActivity.class);
-            startActivityForResult(intent, 1);
-        });
 
         blogPosts = new ArrayList<>();
 
