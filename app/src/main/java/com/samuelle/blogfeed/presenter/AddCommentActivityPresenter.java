@@ -11,7 +11,9 @@ import com.samuelle.blogfeed.service.APIUtils;
 import com.samuelle.blogfeed.view.AddCommentActivity;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class AddCommentActivityPresenter {
@@ -23,28 +25,9 @@ public class AddCommentActivityPresenter {
         this.apiService = APIUtils.getAPIService();
     }
 
-    private Observable<Comment> addCommentObservable(int postId, String name, String email, String body) {
+    // Will make a post request to the end point with the postId, name, email, and body.  Returns an observable.  Done async
+    public Observable<Comment> addCommentObservable(int postId, String name, String email, String body) {
         return apiService
-                .addComment(postId, name, email, body)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public void addComment(String name, String email, String body) {
-        if (!name.isEmpty() && !email.isEmpty() && !body.isEmpty()) {
-            int postId = context.getIntent().getIntExtra("postId", -1);
-
-            addCommentObservable(postId, name, email, body)
-            .subscribe(comment -> {
-                Intent intent = new Intent();
-                intent.putExtra("comment", comment);
-
-                context.setResult(Activity.RESULT_OK, intent);
-                context.finish();
-            });
-
-        } else {
-            Toast.makeText(context, "Fill in all fields", Toast.LENGTH_LONG).show();
-        }
+                .addComment(postId, name, email, body);
     }
 }

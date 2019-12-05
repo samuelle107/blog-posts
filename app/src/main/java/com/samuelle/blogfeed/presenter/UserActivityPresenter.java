@@ -9,7 +9,6 @@ import com.samuelle.blogfeed.view.UserActivity;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class UserActivityPresenter {
     private UserActivity context;
@@ -20,9 +19,9 @@ public class UserActivityPresenter {
         this.apiService = APIUtils.getAPIService();
     }
 
+    // Will return an observable of blog posts made by the desired user by making an API call
     public Observable<List<BlogPost>> getBlogPostsByUserObservable(User user) {
         return apiService
-                .getBlogPostsByUserId(user.getId())
-                .observeOn(AndroidSchedulers.mainThread());
+                .getBlogPostsByUserId(user.getId());
     }
 }

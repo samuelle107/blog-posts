@@ -7,19 +7,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.samuelle.blogfeed.R;
 import com.samuelle.blogfeed.model.BlogPost;
+import com.samuelle.blogfeed.model.User;
 import com.samuelle.blogfeed.presenter.HomeActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
     private List<BlogPost> blogPosts;
@@ -37,9 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         presenter = new HomeActivityPresenter(this);
         progressOverlay = findViewById(R.id.progressOverlay);
         disposables = new CompositeDisposable();
-
         blogPosts = new ArrayList<>();
-
         blogPostAdapter = new BlogPostAdapter(this, blogPosts, position -> {
             BlogPost blogPost = blogPosts.get(position);
 
@@ -50,17 +52,18 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         presenter
-                .initializeBlogPosts()
-                .subscribe(new Observer<List<BlogPost>>() {
+                .getBlogPostObservable()
+                .flatMap(presenter::getUserObservable)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BlogPost>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(List<BlogPost> blogPosts) {
-                        setBlogPosts(blogPosts);
-                        progressOverlay.setVisibility(View.INVISIBLE);
+                    public void onNext(BlogPost blogPost) {
+                        updateBlogPost(blogPost);
                     }
 
                     @Override
@@ -70,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onComplete() {
-
+                        setProgressOverlayVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -86,24 +89,16 @@ public class HomeActivity extends AppCompatActivity {
 
         disposables.clear();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-                addToBlogPosts(data.getExtras().getParcelable("blogPost"));
-            }
-        }
-    }
 
     public void setBlogPosts(List<BlogPost> blogPosts) {
         this.blogPostAdapter.updateBlogPosts(blogPosts);
     }
 
-    public void addToBlogPosts(BlogPost blogPost) {
-        this.blogPosts.add(0, blogPost);
-        blogPostAdapter.notifyItemInserted(0);
-        recyclerView.scrollToPosition(0);
+    public void updateBlogPost(BlogPost blogPost) {
+        blogPostAdapter.updateBlogPost(blogPost);
+    }
+
+    public void setProgressOverlayVisibility(int visibility) {
+        this.progressOverlay.setVisibility(visibility);
     }
 }

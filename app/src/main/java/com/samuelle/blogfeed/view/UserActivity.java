@@ -16,6 +16,7 @@ import com.samuelle.blogfeed.presenter.UserActivityPresenter;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class UserActivity extends AppCompatActivity {
@@ -36,7 +37,6 @@ public class UserActivity extends AppCompatActivity {
     private UserActivityPresenter presenter;
     private BlogPostAdapter blogPostAdapter;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
@@ -46,8 +46,10 @@ public class UserActivity extends AppCompatActivity {
 
         initializeUserProfile(user);
 
+        // It will make an async api call for blog posts and then on the main thread, it will initialize the recycler view with blog posts
         presenter
                 .getBlogPostsByUserObservable(user)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<BlogPost>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -71,6 +73,7 @@ public class UserActivity extends AppCompatActivity {
                 });
     }
 
+    // Given the user, it will load the view with the user details
     public void initializeUserProfile(User user) {
         this.name = findViewById(R.id.name);
         this.username = findViewById(R.id.username);
@@ -107,6 +110,7 @@ public class UserActivity extends AppCompatActivity {
         });
     }
 
+    // Given the blog posts, it will set up the recycler view
     public void initializeBlogPosts(List<BlogPost> blogPosts) {
         blogPostAdapter = new BlogPostAdapter(this, blogPosts, position -> {
         });

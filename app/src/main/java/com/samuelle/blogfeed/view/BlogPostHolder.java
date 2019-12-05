@@ -1,6 +1,5 @@
 package com.samuelle.blogfeed.view;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,12 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.samuelle.blogfeed.R;
 import com.samuelle.blogfeed.model.BlogPost;
-import com.samuelle.blogfeed.model.User;
-
-import org.w3c.dom.Text;
-
-import java.util.Map;
-
 
 public class BlogPostHolder extends RecyclerView.ViewHolder {
     private TextView itemTitle;

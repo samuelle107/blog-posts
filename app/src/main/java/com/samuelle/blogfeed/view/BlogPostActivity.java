@@ -19,6 +19,7 @@ import com.samuelle.blogfeed.presenter.BlogPostActivityPresenter;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class BlogPostActivity extends AppCompatActivity {
@@ -48,12 +49,12 @@ public class BlogPostActivity extends AppCompatActivity {
             startActivityForResult(intent, 1);
         });
 
-
         initializePostDetails(blogPost);
         initializeUserDetails(blogPost.getUser());
 
         presenter
                 .getCommentsObservable(blogPost)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Comment>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

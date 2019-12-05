@@ -1,16 +1,13 @@
 package com.samuelle.blogfeed.presenter;
 
-
 import com.samuelle.blogfeed.model.BlogPost;
 import com.samuelle.blogfeed.service.APIService;
 import com.samuelle.blogfeed.service.APIUtils;
 import com.samuelle.blogfeed.view.HomeActivity;
 
-
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivityPresenter {
     private HomeActivity context;
@@ -21,38 +18,27 @@ public class HomeActivityPresenter {
         this.apiService = APIUtils.getAPIService();
     }
 
-    private Observable<BlogPost> getBlogPostsObservable() {
+    // Will make an async api call to blog posts, then send the blog posts to the main thread
+    public Observable<BlogPost> getBlogPostObservable() {
         return apiService
                 .getBlogPosts()
-                .flatMap(Observable::fromIterable);
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(blogPosts -> {
+                    context.setBlogPosts(blogPosts);
+
+                    return Observable.fromIterable(blogPosts);
+                })
+                .observeOn(Schedulers.io());
     }
 
-    private Observable<BlogPost> getUserObservable(final BlogPost blogPost) {
+    // Will make an async call to get user data corresponding to the blog post
+    public Observable<BlogPost> getUserObservable(final BlogPost blogPost) {
         return apiService
                 .getUser(blogPost.getUserId())
-                .map(user -> {
+                .flatMap(user -> {
                     blogPost.setUser(user);
 
-                    return blogPost;
+                    return Observable.just(blogPost);
                 });
-    }
-
-    private Observable<BlogPost> getCommentsObservable(final BlogPost blogPost) {
-        return apiService
-                .getComments(blogPost.getId())
-                .map(comments -> {
-                    blogPost.setComments(comments);
-
-                    return blogPost;
-                });
-    }
-
-    public Observable<List<BlogPost>> initializeBlogPosts() {
-        return getBlogPostsObservable()
-//                .flatMap(this::getCommentsObservable)
-                .flatMap(this::getUserObservable)
-                .toList()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread());
     }
 }

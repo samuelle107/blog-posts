@@ -1,7 +1,6 @@
 package com.samuelle.blogfeed.view;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,7 +26,10 @@ public class UserMap extends AppCompatActivity {
             Geo geo = getIntent().getExtras().getParcelable("geo");
             LatLng userLocation = new LatLng(Double.valueOf(geo.getLat()), Double.valueOf(geo.getLng()));
 
-            map.addMarker(new MarkerOptions().position(userLocation).title("User Location").snippet("Location: " + geo.getLat() + ", " + geo.getLng()));
+            map.addMarker(new MarkerOptions()
+                    .position(userLocation)
+                    .title("User Location")
+                    .snippet("Location: " + geo.getLat() + ", " + geo.getLng()));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 5));
         });
     }
