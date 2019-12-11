@@ -43,6 +43,7 @@ public class BlogPostActivity extends AppCompatActivity {
 
         BlogPost blogPost = getIntent().getExtras().getParcelable("blogPost");
 
+        // Adding a new comment
         floatingActionButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddCommentActivity.class);
             intent.putExtra("postId", blogPost.getId());
@@ -52,6 +53,7 @@ public class BlogPostActivity extends AppCompatActivity {
         initializePostDetails(blogPost);
         initializeUserDetails(blogPost.getUser());
 
+        // Will get the comments corresponding to the blog post async and then pass the comments to initializeComments on the main thread
         presenter
                 .getCommentsObservable(blogPost)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,9 +80,11 @@ public class BlogPostActivity extends AppCompatActivity {
                 });
     }
 
+    // WIll initialize the blog post view
     public void initializePostDetails(BlogPost blogPost) {
         StringBuilder stringBuilder = new StringBuilder();
 
+        // Just to capitalize every word in the title
         for (String word : blogPost.getTitle().split(" ")) {
             stringBuilder.append(" ");
             stringBuilder.append(word.substring(0, 1).toUpperCase());
@@ -93,7 +97,9 @@ public class BlogPostActivity extends AppCompatActivity {
         this.blogTitle.setText(title);
         this.blogBody.setText(body);
     }
-//
+
+    // Will populate the view with data about the user
+    // Clicking on the author name will take the the user to the user's activity
     public void initializeUserDetails(User user) {
         String userText = "By " + user.getUsername();
 
@@ -105,7 +111,8 @@ public class BlogPostActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-//
+
+    // Will populate the recycler view with a list of comments
     public void initializeComments(List<Comment> comments) {
         this.commentAdapter = new CommentAdapter(this, comments, position -> {});
 

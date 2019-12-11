@@ -44,66 +44,6 @@
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
-        android:id="@+id/street"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/phoneNumber"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
-
-    <TextView
-        android:id="@+id/suite"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/zipcode"
-        app:layout_constraintTop_toBottomOf="@+id/street" />
-
-    <TextView
-        android:id="@+id/city"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/street"
-        app:layout_constraintTop_toBottomOf="@+id/suite" />
-
-    <TextView
-        android:id="@+id/zipcode"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/city"
-        app:layout_constraintTop_toBottomOf="@+id/city" />
-
-    <TextView
-        android:id="@+id/viewMapText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:text="View on Map"
-        android:textColor="@color/link"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/city"
-        app:layout_constraintTop_toBottomOf="@+id/zipcode" />
-
-    <TextView
         android:id="@+id/phoneNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -118,46 +58,24 @@
         android:id="@+id/website"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="16sp"
+        android:layout_marginTop="4dp"
         android:fontFamily="@font/montserrat"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toEndOf="@+id/companyName"
-        app:layout_constraintTop_toTopOf="@+id/companyName" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/phoneNumber"
+        app:layout_constraintStart_toStartOf="@+id/phoneNumber"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumber" />
 
-    <TextView
-        android:id="@+id/companyName"
+
+    <fragment
+        android:id="@+id/userMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/montserrat"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/suite"
-        app:layout_constraintTop_toBottomOf="@+id/viewMapText" />
-
-    <TextView
-        android:id="@+id/companyCatchPhrase"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/companyName"
-        app:layout_constraintTop_toBottomOf="@+id/companyName" />
-
-    <TextView
-        android:id="@+id/companyBs"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/companyCatchPhrase"
-        app:layout_constraintTop_toBottomOf="@+id/companyCatchPhrase" />
+        app:layout_constraintEnd_toEndOf="@+id/website"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/website"
+        app:layout_constraintTop_toBottomOf="@+id/website" />
 
     <TextView
         android:id="@+id/userPostsHeader"
@@ -168,15 +86,13 @@
         android:text="Posts"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/companyBs"
-        app:layout_constraintTop_toBottomOf="@+id/companyBs" />
-
+        app:layout_constraintStart_toStartOf="@+id/userMap"
+        app:layout_constraintTop_toBottomOf="@+id/userMap" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userPosts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userPostsHeader"
         tools:layout_editor_absoluteX="0dp" />

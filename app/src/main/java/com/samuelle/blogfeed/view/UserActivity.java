@@ -8,8 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.samuelle.blogfeed.R;
 import com.samuelle.blogfeed.model.BlogPost;
+import com.samuelle.blogfeed.model.Geo;
 import com.samuelle.blogfeed.model.User;
 import com.samuelle.blogfeed.presenter.UserActivityPresenter;
 
@@ -23,19 +29,12 @@ public class UserActivity extends AppCompatActivity {
     private TextView name;
     private TextView username;
     private TextView email;
-    private TextView street;
-    private TextView suite;
-    private TextView city;
-    private TextView zipcode;
     private TextView phoneNumber;
     private TextView website;
-    private TextView companyName;
-    private TextView companyCatchPhrase;
-    private TextView compnayBs;
-    private TextView viewMap;
     private RecyclerView recyclerView;
     private UserActivityPresenter presenter;
     private BlogPostAdapter blogPostAdapter;
+    private GoogleMap map;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +44,21 @@ public class UserActivity extends AppCompatActivity {
         User user = getIntent().getExtras().getParcelable("user");
 
         initializeUserProfile(user);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.userMap);
+        // When the map is finished loading, then it will get the location of the user and create a marker at that location
+        mapFragment.getMapAsync(googleMap -> {
+            Geo geo = user.getAddress().getGeo();
+            map = googleMap;
+
+            LatLng userLocation = new LatLng(Double.valueOf(geo.getLat()), Double.valueOf(geo.getLng()));
+
+            map.addMarker(new MarkerOptions()
+                    .position(userLocation)
+                    .title("User Location")
+                    .snippet("Location: " + geo.getLat() + ", " + geo.getLng()));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 5));
+        });
 
         // It will make an async api call for blog posts and then on the main thread, it will initialize the recycler view with blog posts
         presenter
@@ -78,36 +92,14 @@ public class UserActivity extends AppCompatActivity {
         this.name = findViewById(R.id.name);
         this.username = findViewById(R.id.username);
         this.email = findViewById(R.id.email);
-        this.street = findViewById(R.id.street);
-        this.suite = findViewById(R.id.suite);
-        this.city = findViewById(R.id.city);
-        this.zipcode = findViewById(R.id.zipcode);
         this.phoneNumber = findViewById(R.id.phoneNumber);
         this.website = findViewById(R.id.website);
-        this.companyName = findViewById(R.id.companyName);
-        this.companyCatchPhrase = findViewById(R.id.companyCatchPhrase);
-        this.compnayBs = findViewById(R.id.companyBs);
-        this.viewMap = findViewById(R.id.viewMapText);
 
         this.name.setText(user.getName());
         this.username.setText(user.getUsername());
         this.email.setText(user.getEmail());
-        this.street.setText(user.getAddress().getStreet());
-        this.suite.setText(user.getAddress().getSuite());
-        this.city.setText(user.getAddress().getCity());
-        this.zipcode.setText(user.getAddress().getZipcode());
         this.phoneNumber.setText(user.getPhone());
         this.website.setText(user.getWebsite());
-        this.companyName.setText(user.getCompany().getName());
-        this.companyCatchPhrase.setText(user.getCompany().getCatchPhrase());
-        this.compnayBs.setText(user.getCompany().getBs());
-
-        this.viewMap.setOnClickListener(v -> {
-            Intent intent = new Intent(this, UserMap.class);
-            intent.putExtra("geo", user.getAddress().getGeo());
-
-            startActivity(intent);
-        });
     }
 
     // Given the blog posts, it will set up the recycler view

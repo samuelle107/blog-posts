@@ -51,6 +51,8 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // It will get the blog posts async, then for each blog post, it will get the info for the corresponding user, and then it will load the data on the
+        // main thread
         presenter
                 .getBlogPostObservable()
                 .flatMap(presenter::getUserObservable)
