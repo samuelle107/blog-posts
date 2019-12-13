@@ -3,6 +3,7 @@ package com.samuelle.blogfeed.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ public class AddCommentActivity extends AppCompatActivity {
                 int postId = getIntent().getIntExtra("postId", -1);
 
                 presenter
-                        .addCommentObservable(postId, name.toString(), email.toString(), blogBody.toString())
+                        .addCommentObservable(postId, name.getText().toString(), email.getText().toString(), blogBody.getText().toString())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<Comment>() {
                             @Override
